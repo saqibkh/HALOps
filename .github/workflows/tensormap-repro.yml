@@ -21,6 +21,7 @@ jobs:
         uses: pantheongpu/setup-pantheonsim@a1b9d4237411f9b2b0e0bb895b4d83377f336a7b # v0.1.9
         with:
           gpu: nvidia/b200
+          cuda-toolkit: "13.0"
 
       - name: Build
         run: |
