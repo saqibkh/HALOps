@@ -13,7 +13,7 @@ typedef CUresult (*EncodeFn)(CUtensorMap*, CUtensorMapDataType, cuuint32_t, void
                              CUtensorMapL2promotion, CUtensorMapFloatOOBfill);
 
 static EncodeFn g_encode;
-static alignas(64) CUtensorMap g_static_map;
+static CUtensorMap g_static_map;  // CUtensorMap is alignas(64) in cuda.h
 
 // Same arguments as the failing HALOps call.
 static CUresult halops_call(CUtensorMap* m, void* ptr) {
