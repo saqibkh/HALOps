@@ -1,0 +1,33 @@
+name: tensormap-repro
+
+on:
+  push:
+    branches: [tensormap-repro]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repro:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up the simulated B200
+        uses: pantheongpu/setup-pantheonsim@a1b9d4237411f9b2b0e0bb895b4d83377f336a7b # v0.1.9
+        with:
+          gpu: nvidia/b200
+
+      - name: Build
+        run: |
+          nvcc --version | tail -2
+          nvcc -std=c++17 -arch=compute_90 -cudart shared repro.cu -o repro
+
+      - name: Run on the simulated B200
+        run: |
+          vgpu run --gpu nvidia/b200 ./repro 2>&1 | tee out.txt || true
+          echo "--- exit status of the run above is ignored on purpose ---"
